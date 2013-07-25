@@ -289,6 +289,8 @@ static VALUE aarb_render(VALUE self) {
   aa_context *ptr;
   Data_Get_Struct(self, aa_context, ptr);
 
+  aa_resize(ptr);
+
   //Brightness in range 0 (normal) to 255 (white)
   //Contrast value in range 0 (normal) to 127 (white)
   //Gamma value in the standard range
@@ -298,14 +300,10 @@ static VALUE aarb_render(VALUE self) {
 
   aa_renderparams rp = {0, 0, 1.0, AA_FLOYD_S, 1, 0};
   aa_render(ptr, &rp, 0, 0, aa_scrwidth(ptr), aa_scrheight(ptr));
-  aa_flush(ptr);
-  return Qnil;
-}
 
-static VALUE aarb_supported(VALUE self) {
-  aa_context *ptr;
-  Data_Get_Struct(self, aa_context, ptr);
-  return INT2NUM(ptr->params.supported);
+  aa_flush(ptr);
+
+  return Qnil;
 }
 
 static void aarb_free(void *ptr) {
@@ -337,7 +335,6 @@ void Init_aalib(void) {
   rb_define_method(cAArb, "imgwidth", aarb_imgwidth, 0);
   rb_define_method(cAArb, "imgheight", aarb_imgheight, 0);
   rb_define_method(cAArb, "scrwidth", aarb_scrwidth, 0);
-  rb_define_method(cAArb, "supported", aarb_supported, 0);
   rb_define_method(cAArb, "scrheight", aarb_scrheight, 0);
   rb_define_method(cAArb, "putpixel", aarb_putpixel, 3);
   rb_define_method(cAArb, "render", aarb_render, 0);

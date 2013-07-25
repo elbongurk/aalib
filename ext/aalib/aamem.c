@@ -3,7 +3,7 @@
 
 static int mem_init(__AA_CONST struct aa_hardware_params *p,__AA_CONST  void *none, struct aa_hardware_params *dest, void **params)
 {
-    struct aa_hardware_params def={NULL, AA_DIM_MASK | AA_REVERSE_MASK | AA_NORMAL_MASK | AA_BOLD_MASK | AA_EXTENDED};
+    struct aa_hardware_params def={NULL, AA_DIM_MASK | AA_REVERSE_MASK | AA_NORMAL_MASK | AA_BOLD_MASK | AA_EXTENDED | AA_BOLDFONT_MASK };
     *dest=def;
     return 1;
 }
