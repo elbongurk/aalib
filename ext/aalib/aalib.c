@@ -280,16 +280,26 @@ static VALUE aarb_text(VALUE self) {
 }
 
 static VALUE aarb_attrs(VALUE self) {
+  int i, length;
+  VALUE array;
   aa_context *ptr;
+
   Data_Get_Struct(self, aa_context, ptr);
-  return rb_str_new2(aa_attrs(ptr));
+
+  length = aa_scrwidth(ptr) * aa_scrheight(ptr);
+
+  array = rb_ary_new2(length);
+
+  for(i=0; i<length; i++) {
+    rb_ary_store(array, i, CHR2FIX(ptr->attrbuffer[i]));
+  }
+
+  return array;
 }
 
 static VALUE aarb_render(VALUE self) {
   aa_context *ptr;
   Data_Get_Struct(self, aa_context, ptr);
-
-  aa_resize(ptr);
 
   //Brightness in range 0 (normal) to 255 (white)
   //Contrast value in range 0 (normal) to 127 (white)

@@ -16,6 +16,6 @@ class AttrsTest <  MiniTest::Unit::TestCase
 
     a.render
 
-    assert_equal a.scrwidth * a.scrheight, a.attrs.unpack("C*").size
+    assert_equal a.scrwidth * a.scrheight, a.attrs.size
   end
 end
