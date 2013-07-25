@@ -1,7 +1,7 @@
 require "test/unit"
 require "aalib"
 
-class AttrsTest <  MiniTest::Unit::TestCase
+class AttrsTest <  Test::Unit::TestCase
   def test_attrs_is_the_correct_size_once_image_is_filled
     width = 150
     height = 150
@@ -19,3 +19,11 @@ class AttrsTest <  MiniTest::Unit::TestCase
     assert_equal a.scrwidth * a.scrheight, a.attrs.size
   end
 end
+
+
+
+
+
+
+
+
