@@ -301,7 +301,7 @@ static VALUE aarb_render(VALUE self) {
   cPixel = rb_const_get_at(mAAlib, rb_intern("Pixel"));
 
   for(i=0; i<length; i++) {
-    imgpos = i * 2 + (i % scrwidth * imgwidth);
+    imgpos = i * 2 + ((i % scrwidth) * imgwidth);
 
     args[0] = CHR2FIX(ptr->textbuffer[i]);
     args[1] = CHR2FIX(ptr->attrbuffer[i]);
