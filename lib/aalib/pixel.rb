@@ -8,6 +8,10 @@ module AAlib
       @color = color
     end
 
+    def hex
+      "##{self.color.to_s(16).rjust(2, '0') * 2}"
+    end
+
     def normal?
       self.attr == Attr::NORMAL
     end
