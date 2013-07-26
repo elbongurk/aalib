@@ -274,8 +274,8 @@ static VALUE aarb_putpixel(VALUE self, VALUE x, VALUE y, VALUE color) {
 }
 
 static VALUE aarb_render(VALUE self) {
-  int i, length;
-  VALUE array, hash;
+  int i, length, width, pos;
+  VALUE mAAlib, cPixel, array, pixel, args[3];
   aa_context *ptr;
 
   Data_Get_Struct(self, aa_context, ptr);
@@ -292,14 +292,24 @@ static VALUE aarb_render(VALUE self) {
 
   aa_flush(ptr);
 
+  width = aa_imgwidth(ptr);
   length = aa_scrwidth(ptr) * aa_scrheight(ptr);
   array = rb_ary_new2(length);
   
+  mAAlib = rb_const_get(rb_cObject, rb_intern("AAlib"));
+  cPixel = rb_const_get_at(mAAlib, rb_intern("Pixel"));
+
   for(i=0; i<length; i++) {
-    hash = rb_hash_new();
-    rb_hash_aset(hash, ID2SYM(rb_intern("char")), rb_funcall(CHR2FIX(ptr->textbuffer[i]), rb_intern("chr"), 0));
-    rb_hash_aset(hash, ID2SYM(rb_intern("attr")), CHR2FIX(ptr->attrbuffer[i]));    
-    rb_ary_store(array, i, hash);
+    pos = i * 2;
+
+    args[0] = CHR2FIX(ptr->textbuffer[i]);
+    args[1] = CHR2FIX(ptr->attrbuffer[i]);
+    args[2] = INT2FIX((ptr->imagebuffer[pos] + 
+                       ptr->imagebuffer[pos+1] + 
+                       ptr->imagebuffer[pos+width] + 
+                       ptr->imagebuffer[pos+width+1]) / 4);
+
+    rb_ary_store(array, i, rb_class_new_instance(3, args, cPixel));
   }
 
   return array;

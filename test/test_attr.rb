@@ -15,16 +15,15 @@ class RenderTest <  Test::Unit::TestCase
     end
 
     assert_nothing_raised do
-      a.render.each do |item|
-        case item[:attr]
-          when AAlib::Attr::NORMAL
-          when AAlib::Attr::DIM
-          when AAlib::Attr::BOLD
-          when AAlib::Attr::BOLDFONT
+      a.render.each do |pixel|
+        case pixel.attr
+        when AAlib::Attr::NORMAL
+        when AAlib::Attr::DIM
+        when AAlib::Attr::BOLD
+        when AAlib::Attr::BOLDFONT
         end
       end
     end
-
   end
 end
 
