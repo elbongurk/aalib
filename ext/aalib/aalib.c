@@ -274,7 +274,7 @@ static VALUE aarb_putpixel(VALUE self, VALUE x, VALUE y, VALUE color) {
 }
 
 static VALUE aarb_render(VALUE self) {
-  int i, length, width, pos;
+  int i, length, imgwidth, scrwidth, imgpos;
   VALUE mAAlib, cPixel, array, pixel, args[3];
   aa_context *ptr;
 
@@ -292,7 +292,8 @@ static VALUE aarb_render(VALUE self) {
 
   aa_flush(ptr);
 
-  width = aa_imgwidth(ptr);
+  imgwidth = aa_imgwidth(ptr);
+  scrwidth = aa_scrwidth(ptr);
   length = aa_scrwidth(ptr) * aa_scrheight(ptr);
   array = rb_ary_new2(length);
   
@@ -300,14 +301,14 @@ static VALUE aarb_render(VALUE self) {
   cPixel = rb_const_get_at(mAAlib, rb_intern("Pixel"));
 
   for(i=0; i<length; i++) {
-    pos = i * 2;
+    imgpos = i * 2 + (i % scrwidth * imgwidth);
 
     args[0] = CHR2FIX(ptr->textbuffer[i]);
     args[1] = CHR2FIX(ptr->attrbuffer[i]);
-    args[2] = INT2FIX((ptr->imagebuffer[pos] + 
-                       ptr->imagebuffer[pos+1] + 
-                       ptr->imagebuffer[pos+width] + 
-                       ptr->imagebuffer[pos+width+1]) / 4);
+    args[2] = CHR2FIX((ptr->imagebuffer[imgpos] + 
+                       ptr->imagebuffer[imgpos+1] + 
+                       ptr->imagebuffer[imgpos+imgwidth] + 
+                       ptr->imagebuffer[imgpos+imgwidth+1]) / 4);
 
     rb_ary_store(array, i, rb_class_new_instance(3, args, cPixel));
   }
