@@ -9,7 +9,7 @@ module AAlib
     end
 
     def hex
-      "##{self.color.to_s(16).rjust(2, '0') * 2}"
+      "##{self.color.to_s(16).rjust(2, '0') * 3}"
     end
 
     def normal?
