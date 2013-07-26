@@ -301,14 +301,16 @@ static VALUE aarb_render(VALUE self) {
   cPixel = rb_const_get_at(mAAlib, rb_intern("Pixel"));
 
   for(i=0; i<length; i++) {
-    imgpos = i * 2 + ((i % scrwidth) * imgwidth);
-
     args[0] = CHR2FIX(ptr->textbuffer[i]);
     args[1] = CHR2FIX(ptr->attrbuffer[i]);
+
+    imgpos = i * 2 + ((i / scrwidth) * imgwidth);
+
     args[2] = INT2FIX((ptr->imagebuffer[imgpos] + 
                        ptr->imagebuffer[imgpos+1] + 
                        ptr->imagebuffer[imgpos+imgwidth] + 
                        ptr->imagebuffer[imgpos+imgwidth+1]) / 4);
+
 
     rb_ary_store(array, i, rb_class_new_instance(3, args, cPixel));
   }
