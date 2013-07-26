@@ -273,32 +273,11 @@ static VALUE aarb_putpixel(VALUE self, VALUE x, VALUE y, VALUE color) {
   return Qnil;
 }
 
-static VALUE aarb_text(VALUE self) {
-  aa_context *ptr;
-  Data_Get_Struct(self, aa_context, ptr);
-  return rb_str_new2(aa_text(ptr));
-}
-
-static VALUE aarb_attrs(VALUE self) {
-  int i, length;
-  VALUE array;
-  aa_context *ptr;
-
-  Data_Get_Struct(self, aa_context, ptr);
-
-  length = aa_scrwidth(ptr) * aa_scrheight(ptr);
-
-  array = rb_ary_new2(length);
-
-  for(i=0; i<length; i++) {
-    rb_ary_store(array, i, CHR2FIX(ptr->attrbuffer[i]));
-  }
-
-  return array;
-}
-
 static VALUE aarb_render(VALUE self) {
+  int i, length;
+  VALUE array, hash;
   aa_context *ptr;
+
   Data_Get_Struct(self, aa_context, ptr);
 
   //Brightness in range 0 (normal) to 255 (white)
@@ -313,7 +292,17 @@ static VALUE aarb_render(VALUE self) {
 
   aa_flush(ptr);
 
-  return Qnil;
+  length = aa_scrwidth(ptr) * aa_scrheight(ptr);
+  array = rb_ary_new2(length);
+  
+  for(i=0; i<length; i++) {
+    hash = rb_hash_new();
+    rb_hash_aset(hash, ID2SYM(rb_intern("char")), rb_funcall(CHR2FIX(ptr->textbuffer[i]), rb_intern("chr"), 0));
+    rb_hash_aset(hash, ID2SYM(rb_intern("attr")), CHR2FIX(ptr->attrbuffer[i]));    
+    rb_ary_store(array, i, hash);
+  }
+
+  return array;
 }
 
 static void aarb_free(void *ptr) {
@@ -337,17 +326,18 @@ static VALUE aarb_new(VALUE class, VALUE width, VALUE height) {
   return aa;
 }
 
-VALUE cAArb;
+VALUE mAAlib;
 void Init_aalib(void) {
-  cAArb = rb_define_class("AAlib", rb_cObject);
-  rb_define_singleton_method(cAArb, "new", aarb_new, 2);
-  rb_define_method(cAArb, "initialize", aarb_init, 0);
-  rb_define_method(cAArb, "imgwidth", aarb_imgwidth, 0);
-  rb_define_method(cAArb, "imgheight", aarb_imgheight, 0);
-  rb_define_method(cAArb, "scrwidth", aarb_scrwidth, 0);
-  rb_define_method(cAArb, "scrheight", aarb_scrheight, 0);
-  rb_define_method(cAArb, "putpixel", aarb_putpixel, 3);
-  rb_define_method(cAArb, "render", aarb_render, 0);
-  rb_define_method(cAArb, "text", aarb_text, 0);
-  rb_define_method(cAArb, "attrs", aarb_attrs, 0);
+  mAAlib = rb_define_module("AAlib");
+  
+  VALUE cAAlibContext = rb_define_class_under(mAAlib, "Context", rb_cObject);
+
+  rb_define_singleton_method(cAAlibContext, "new", aarb_new, 2);
+  rb_define_method(cAAlibContext, "initialize", aarb_init, 0);
+  rb_define_method(cAAlibContext, "imgwidth", aarb_imgwidth, 0);
+  rb_define_method(cAAlibContext, "imgheight", aarb_imgheight, 0);
+  rb_define_method(cAAlibContext, "scrwidth", aarb_scrwidth, 0);
+  rb_define_method(cAAlibContext, "scrheight", aarb_scrheight, 0);
+  rb_define_method(cAAlibContext, "putpixel", aarb_putpixel, 3);
+  rb_define_method(cAAlibContext, "render", aarb_render, 0);
 }

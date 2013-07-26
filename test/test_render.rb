@@ -1,12 +1,12 @@
 require "test/unit"
 require "aalib"
 
-class AttrsTest <  Test::Unit::TestCase
-  def test_attrs_is_the_correct_size_once_image_is_filled
+class RenderTest <  Test::Unit::TestCase
+  def test_render_returns_correct_size_when_filled
     width = 150
     height = 150
 
-    a = AAlib.new(width, height)
+    a = AAlib::Context.new(width, height)
 
     height.times do |y|
       width.times do |x|
@@ -14,9 +14,7 @@ class AttrsTest <  Test::Unit::TestCase
       end
     end
 
-    a.render
-
-    assert_equal a.scrwidth * a.scrheight, a.attrs.size
+    assert_equal a.scrwidth * a.scrheight, a.render.size
   end
 end
 
