@@ -305,7 +305,7 @@ static VALUE aarb_render(VALUE self) {
 
     args[0] = CHR2FIX(ptr->textbuffer[i]);
     args[1] = CHR2FIX(ptr->attrbuffer[i]);
-    args[2] = CHR2FIX((ptr->imagebuffer[imgpos] + 
+    args[2] = INT2FIX((ptr->imagebuffer[imgpos] + 
                        ptr->imagebuffer[imgpos+1] + 
                        ptr->imagebuffer[imgpos+imgwidth] + 
                        ptr->imagebuffer[imgpos+imgwidth+1]) / 4);
