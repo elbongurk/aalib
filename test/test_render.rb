@@ -1,5 +1,4 @@
-require "test/unit"
-require "aalib"
+require "test_helper"
 
 class RenderTest <  Test::Unit::TestCase
   def test_render_returns_correct_size_when_filled

@@ -273,9 +273,9 @@ static VALUE aarb_putpixel(VALUE self, VALUE x, VALUE y, VALUE color) {
   return Qnil;
 }
 
-static VALUE aarb_render(VALUE self) {
+static VALUE aarb_render(int argc, VALUE* argv, VALUE self) {
   int i, length, imgwidth, scrwidth, imgpos;
-  VALUE mAAlib, cPixel, array, pixel, args[3];
+  VALUE mAAlib, cPixel, array, pixel, temp, args[3];
   aa_context *ptr;
 
   Data_Get_Struct(self, aa_context, ptr);
@@ -288,6 +288,39 @@ static VALUE aarb_render(VALUE self) {
   //Range of random value added to each pixel for random dithering
 
   aa_renderparams rp = {0, 0, 1.0, AA_FLOYD_S, 1, 0};
+
+  if (argc == 1) {
+    temp = rb_hash_aref(argv[0], rb_str_new2("bright"));
+    if (temp != Qnil) {
+      rp.bright = FIX2INT(temp);
+    }
+    temp = rb_hash_aref(argv[0], rb_str_new2("contrast"));
+    if (temp != Qnil) {
+      rp.contrast = FIX2INT(temp);
+    }
+    temp = rb_hash_aref(argv[0], rb_str_new2("gamma"));
+    if (temp != Qnil) {
+      rp.gamma = NUM2FLT(temp);
+    }
+    temp = rb_hash_aref(argv[0], rb_str_new2("dither"));
+    if (temp != Qnil) {
+      rp.dither = FIX2INT(temp);
+    }
+    temp = rb_hash_aref(argv[0], rb_str_new2("random"));
+    if (temp != Qnil) {
+      rp.randomval = FIX2INT(temp);
+    }
+    temp = rb_hash_aref(argv[0], rb_str_new2("inverse"));
+    if (temp != Qnil) {
+      if (temp == Qtrue) {
+        rp.inversion = 1;
+      }
+      else {
+        rp.inversion = 0;
+      }
+    }
+  }
+
   aa_render(ptr, &rp, 0, 0, aa_scrwidth(ptr), aa_scrheight(ptr));
 
   aa_flush(ptr);
@@ -352,5 +385,5 @@ void Init_aalib(void) {
   rb_define_method(cAAlibContext, "scrwidth", aarb_scrwidth, 0);
   rb_define_method(cAAlibContext, "scrheight", aarb_scrheight, 0);
   rb_define_method(cAAlibContext, "putpixel", aarb_putpixel, 3);
-  rb_define_method(cAAlibContext, "render", aarb_render, 0);
+  rb_define_method(cAAlibContext, "render", aarb_render, -1);
 }
