@@ -290,27 +290,27 @@ static VALUE aarb_render(int argc, VALUE* argv, VALUE self) {
   aa_renderparams rp = {0, 0, 1.0, AA_FLOYD_S, 1, 0};
 
   if (argc == 1) {
-    temp = rb_hash_aref(argv[0], rb_str_new2("bright"));
+    temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("bright")));
     if (temp != Qnil) {
       rp.bright = FIX2INT(temp);
     }
-    temp = rb_hash_aref(argv[0], rb_str_new2("contrast"));
+    temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("contrast")));
     if (temp != Qnil) {
       rp.contrast = FIX2INT(temp);
     }
-    temp = rb_hash_aref(argv[0], rb_str_new2("gamma"));
+    temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("gamma")));
     if (temp != Qnil) {
       rp.gamma = NUM2FLT(temp);
     }
-    temp = rb_hash_aref(argv[0], rb_str_new2("dither"));
+    temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("dither")));
     if (temp != Qnil) {
       rp.dither = FIX2INT(temp);
     }
-    temp = rb_hash_aref(argv[0], rb_str_new2("random"));
+    temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("random")));
     if (temp != Qnil) {
       rp.randomval = FIX2INT(temp);
     }
-    temp = rb_hash_aref(argv[0], rb_str_new2("inverse"));
+    temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("inverse")));
     if (temp != Qnil) {
       if (temp == Qtrue) {
         rp.inversion = 1;
