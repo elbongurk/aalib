@@ -300,7 +300,7 @@ static VALUE aarb_render(int argc, VALUE* argv, VALUE self) {
     }
     temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("gamma")));
     if (temp != Qnil) {
-      rp.gamma = NUM2FLT(temp);
+      rp.gamma = (float)NUM2DBL(temp);
     }
     temp = rb_hash_aref(argv[0], ID2SYM(rb_intern("dither")));
     if (temp != Qnil) {
