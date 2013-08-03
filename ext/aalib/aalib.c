@@ -268,14 +268,37 @@ static VALUE aarb_scrheight(VALUE self) {
 
 static VALUE aarb_putpixel(VALUE self, VALUE x, VALUE y, VALUE color) {
   aa_context *ptr;
-  Data_Get_Struct(self, aa_context, ptr);
+  Data_Get_Struct(self, aa_context, ptr);  
   aa_putpixel(ptr, NUM2INT(x), NUM2INT(y), NUM2INT(color));
   return Qnil;
 }
 
+static VALUE aarb_getpixel(VALUE self, VALUE x, VALUE y) {
+  aa_context *ptr;
+  Data_Get_Struct(self, aa_context, ptr);
+  return CHR2FIX(ptr->textbuffer[NUM2INT(x) + NUM2INT(y) * aa_scrwidth(ptr)]);
+}
+
+static VALUE aarb_getattr(VALUE self, VALUE x, VALUE y) {
+  aa_context *ptr;
+  Data_Get_Struct(self, aa_context, ptr);
+  return CHR2FIX(ptr->attrbuffer[NUM2INT(x) + NUM2INT(y) * aa_scrwidth(ptr)]);
+}
+
+static VALUE aarb_getcolor(VALUE self, VALUE x, VALUE y) {
+  aa_context *ptr;
+  Data_Get_Struct(self, aa_context, ptr);
+
+  int imgpos = 4 * NUM2INT(x) + 2 * NUM2INT(y) * aa_imgwidth(ptr);
+
+  return INT2FIX((ptr->imagebuffer[imgpos] + 
+                  ptr->imagebuffer[imgpos+1] + 
+                  ptr->imagebuffer[imgpos+aa_imgwidth(ptr)] + 
+                  ptr->imagebuffer[imgpos+aa_imgwidth(ptr)+1]) / 4);
+}
+
 static VALUE aarb_render(int argc, VALUE* argv, VALUE self) {
-  int i, length, imgwidth, scrwidth, imgpos;
-  VALUE mAAlib, cPixel, array, pixel, temp, args[3];
+  VALUE temp;
   aa_context *ptr;
 
   Data_Get_Struct(self, aa_context, ptr);
@@ -325,30 +348,7 @@ static VALUE aarb_render(int argc, VALUE* argv, VALUE self) {
 
   aa_flush(ptr);
 
-  imgwidth = aa_imgwidth(ptr);
-  scrwidth = aa_scrwidth(ptr);
-  length = aa_scrwidth(ptr) * aa_scrheight(ptr);
-  array = rb_ary_new2(length);
-  
-  mAAlib = rb_const_get(rb_cObject, rb_intern("AAlib"));
-  cPixel = rb_const_get_at(mAAlib, rb_intern("Pixel"));
-
-  for(i=0; i<length; i++) {
-    args[0] = CHR2FIX(ptr->textbuffer[i]);
-    args[1] = CHR2FIX(ptr->attrbuffer[i]);
-
-    imgpos = i * 2 + ((i / scrwidth) * imgwidth);
-
-    args[2] = INT2FIX((ptr->imagebuffer[imgpos] + 
-                       ptr->imagebuffer[imgpos+1] + 
-                       ptr->imagebuffer[imgpos+imgwidth] + 
-                       ptr->imagebuffer[imgpos+imgwidth+1]) / 4);
-
-
-    rb_ary_store(array, i, rb_class_new_instance(3, args, cPixel));
-  }
-
-  return array;
+  return Qnil;
 }
 
 static void aarb_free(void *ptr) {
@@ -385,5 +385,8 @@ void Init_aalib(void) {
   rb_define_method(cAAlibContext, "scrwidth", aarb_scrwidth, 0);
   rb_define_method(cAAlibContext, "scrheight", aarb_scrheight, 0);
   rb_define_method(cAAlibContext, "putpixel", aarb_putpixel, 3);
+  rb_define_method(cAAlibContext, "getpixel", aarb_getpixel, 2);
+  rb_define_method(cAAlibContext, "getattr", aarb_getattr, 2);
+  rb_define_method(cAAlibContext, "getcolor", aarb_getcolor, 2);
   rb_define_method(cAAlibContext, "render", aarb_render, -1);
 }

@@ -1,7 +1,7 @@
 require "test_helper"
 
 class RenderTest <  Test::Unit::TestCase
-  def test_render_returns_correct_size_when_filled
+  def test_render_allows_getters
     width = 150
     height = 150
 
@@ -13,7 +13,17 @@ class RenderTest <  Test::Unit::TestCase
       end
     end
 
-    assert_equal a.scrwidth * a.scrheight, a.render.size
+    a.render
+
+    assert_nothing_raised do
+      a.scrheight.times do |y|
+        a.scrwidth.times do |x|
+          a.getpixel(x, y)
+          a.getattr(x, y)
+          a.getcolor(x, y)
+        end
+      end
+    end
   end
 end
 
