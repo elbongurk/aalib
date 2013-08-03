@@ -289,7 +289,7 @@ static VALUE aarb_getcolor(VALUE self, VALUE x, VALUE y) {
   aa_context *ptr;
   Data_Get_Struct(self, aa_context, ptr);
 
-  int imgpos = 4 * NUM2INT(x) + 2 * NUM2INT(y) * aa_imgwidth(ptr);
+  int imgpos = 2 * NUM2INT(x) + 2 * NUM2INT(y) * aa_scrwidth(ptr);
 
   return INT2FIX((ptr->imagebuffer[imgpos] + 
                   ptr->imagebuffer[imgpos+1] + 
