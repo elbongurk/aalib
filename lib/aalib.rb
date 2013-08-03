@@ -1,7 +1,7 @@
 require "aalib/aalib"
 require "aalib/version"
 require "aalib/attr"
-require "aalib/pixel"
+require "aalib/dither"
 
 module AAlib
 end
