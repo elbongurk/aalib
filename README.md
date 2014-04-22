@@ -1,6 +1,6 @@
 # aalib
 
-Ruby wrapper for aalib. Like the awesome [aalib-ruby](http://aalib-ruby.rubyforge.org) but doesn't require you to have aalib installed as a lib.
+Ruby wrapper for aalib. Like the awesome [aalib-ruby](http://aalib-ruby.rubyforge.org) but doesn't require you to have aalib installed.
 
 ## Installation
 
@@ -14,7 +14,7 @@ And then execute:
 
 ## Usage
 
-    width, height = 300, 200
+    width, height = [300, 200]
     a = AAlib::Context.new(width, height)
 
     height.times do |y|
