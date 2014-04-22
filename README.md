@@ -1,6 +1,6 @@
 # aalib
 
-Use aalib from within Ruby. Like the awesome [aalib-ruby](http://aalib-ruby.rubyforge.org) but doesn't require you to have aalib installed as lib.
+Ruby wrapper for aalib. Like the awesome [aalib-ruby](http://aalib-ruby.rubyforge.org) but doesn't require you to have aalib installed as a lib.
 
 ## Installation
 
