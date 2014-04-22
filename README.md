@@ -1,6 +1,6 @@
 # aalib
 
-TODO: Write a gem description
+Use aalib from within Ruby. Like the awesome [aalib-ruby](http://aalib-ruby.rubyforge.org) but doesn't require you to have aalib installed as lib.
 
 ## Installation
 
