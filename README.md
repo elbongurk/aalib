@@ -1,4 +1,4 @@
-# Aalib
+# aalib
 
 TODO: Write a gem description
 
@@ -6,20 +6,39 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'aalib'
+    gem 'aalib', :github => 'elbongurk/aalib'
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install aalib
-
 ## Usage
 
-TODO: Write usage instructions here
+    width, height = 300, 200
+    a = AAlib::Context.new(width, height)
 
+    height.times do |y|
+      width.times do |x|
+        # Greyscale values go in from 0-255
+        a.putpixel(x, y, Random.rand(256))
+      end
+    end
+
+    # Compute!
+    a.render
+
+    # scrheight & scrwidth are 50% size of height & width
+    a.scrheight.times do |y|
+      a.scrwidth.times do |x|
+        # Retrieve ASCII character value
+        a.getpixel(x, y)
+        # Retrieve aalib attribute value
+        a.getattr(x, y)
+        # Retrieve greyscale color value
+        a.getcolor(x, y)
+      end
+    end
+    
 ## Contributing
 
 1. Fork it
